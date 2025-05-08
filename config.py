@@ -102,5 +102,9 @@ class Seg_y_Rev2_1_Config:
     }
 
     STANDARD_TRACE_HEADER = {
-        
+        1 : ("Trace sequence number within line — Numbers continue to increase if the same line continues across multiple SEG-Y files.", 4), # trace 라인 넘버 1 ~
+        5 : ("Trace sequence number within SEG-Y file — Each file starts with trace sequence one.", 4), #SEG-Y 파일 내의 추적 시퀀스 번호 - 각 파일은 추적 시퀀스 1로 시작합니다.
+        9 : ("Original field record number."), # 원본 필트 레코드 번호.
+        13 : ("Trace number within the original field record. "), # 원본 필드 레코드 내의 추적번호
+        17 : ("Energy source point number — Used when more than one record occurs at the same effective surface location.  It is recommended that the new entry defined in Trace Header bytes 197–202 be used for shotpoint number.", 4)
     }
