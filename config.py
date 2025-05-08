@@ -30,6 +30,8 @@ Extended number of auxiliary traces per ensemble (3265 - 3268)
 Extended number of data traces per ensemble
     1. if this data isn't 0 ignore the 3213 ~ 3214 original data
 
+
+IF YOU NEED TO USE THIS CONFIG FILE, MAKE -1 IN THE KEY VALUE (EX. 3201, 3300 ..). PYTHON'S INDEX STARTS FROM 0.    
 '''
 
 
@@ -106,5 +108,9 @@ class Seg_y_Rev2_1_Config:
         5 : ("Trace sequence number within SEG-Y file — Each file starts with trace sequence one.", 4), #SEG-Y 파일 내의 추적 시퀀스 번호 - 각 파일은 추적 시퀀스 1로 시작합니다.
         9 : ("Original field record number."), # 원본 필트 레코드 번호.
         13 : ("Trace number within the original field record. "), # 원본 필드 레코드 내의 추적번호
-        17 : ("Energy source point number — Used when more than one record occurs at the same effective surface location.  It is recommended that the new entry defined in Trace Header bytes 197–202 be used for shotpoint number.", 4)
-    }
+        17 : ("Energy source point number — Used when more than one record occurs at the same effective surface location.  It is recommended that the new entry defined in Trace Header bytes 197-202 be used for shotpoint number.", 4), # ?
+        25 :("Trace number within the ensemble--Each ensemble starts with trace numbers", 4), #
+        29 : ("Trace identification code : ", 2), #  {-1 : Other, 0 = Unknown, 1 : Time domain seismic data, 2 : Dead, 3 : Dummy, 4 : Time break ... 16,383 : Optional}
+        31 : ("Number of vertically summed traces yielding this trace.", 2), # {1 : one trace, 2 : summed traces, etc}
+        33 : ("Number of horizontally stacked traces yielding this trace", 2) # {1 : one trace, 2 : two stacked traces, etc}    
+        }
