@@ -36,6 +36,16 @@ IF YOU NEED TO USE THIS CONFIG FILE, MAKE -1 IN THE KEY VALUE (EX. 3201, 3300 ..
 
 import numpy as np
 from dtype import _dtype
+from dataclasses import dataclass
+from typing import Literal
+
+@dataclass
+class METADATA:
+    BYTE_ORDER : Literal["big", "little"] = "big"
+    EXTENDED_HEADER : int = 0
+    BASE_BYTE : int = 3200
+    DATA_TRACE : int = 0
+    VER : int = 2
 
 BINARY_HEADER = np.array([
     (1, "Job identification number.", 4, False),
@@ -45,7 +55,7 @@ BINARY_HEADER = np.array([
     (15, "Number of auxiliary traces per ensemble. Mandatory for prestack data.", 2, False),
     (17, "Sample interval. µs for time, Hz for frequency, m or ft for depth.", 2, False),
     (19, "Sample interval of original field recording.", 2, False),
-    (21, "Number of samples per data trace. (Primary data)", 2, False),
+    (21, "Number of samples per data trace. (Primary data)", 2, True),
     (23, "Number of samples per data trace for original field recording.", 2, False),
     (25, "Data sample format code.", 2, False),
     (27, "Ensemble fold — The expected number of data traces per trace ensemble", 2, False),
@@ -193,12 +203,13 @@ SAMPLING_CODE = np.array([
 
 
 CONDITION = np.array([
-    (3261, 0, 3213), #override
-    (3265, 0, 3215), #override
-    (3269, 0, 3221), #override
-    (3273, 0, 3217), #override
-    (3281, 0, 3219), #override
-    (3289, 0, 3223), #override
-    (3505, -1, 3521), # 3600 + 3200 * data, 정확한 위치 기록
+    (61, 13), #override
+    (65, 15), #override
+    (69, 21), #override
+    (73, 17), #override
+    (81, 19), #override
+    (89, 23), #override
+    # (69, 21), #override
+    # (73, 17), #override
     # {"id" , 3297, "data" , 0, "ref_id" , 3223}, #edian
 ], dtype = _dtype.COND)

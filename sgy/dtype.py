@@ -16,6 +16,5 @@ class _dtype:
 
     COND = np.dtype([
         ("id" , np.uint16),
-        ("data", np.intc),
         ("ref_id", np.int16) 
     ])
