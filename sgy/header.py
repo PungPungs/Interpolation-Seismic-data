@@ -101,6 +101,7 @@ STANDARD_BASE_HEADER = np.array([
     (9,  "Original field record number", 4, False),
     (13, "Trace number within the original field record", 4, False),
     (17, "Energy source point number", 4, False),
+    (21, "Ensemble number (i.e. CDP, CMP, CRP, etc.)", 4, False),
     (25, "Trace number within the ensemble", 4, False),
     (29, "Trace identification code", 2, False),   # 코드 참조 가능
     (31, "Number of vertically summed traces yielding this trace", 2, False),   # 상수 맵 있을 가능성
@@ -170,7 +171,7 @@ STANDARD_BASE_HEADER = np.array([
     (185, "Y coordinate of ensemble (CDP) position of this trace", 4, False),
     (189, "For 3-D poststack data, this field should be used for the in-line number", 4, False),
     (193, "For 3-D poststack data", 4, False),
-    (197, "Shotpoint number", 2, False),
+    (197, "Shotpoint number", 4, False),
     (201, "Scalar to be applied to the shotpoint number in Standard Trace Header bytes 197~200 to give the real value", 2, False),
     (203, "Trace value measurement unit", 2, False),
     (205, "Transduction Constant", 8, False),

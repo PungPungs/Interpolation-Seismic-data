@@ -8,7 +8,6 @@ from header import BINARY_HEADER, STANDARD_BASE_HEADER, SAMPLING_CODE, METADATA,
 
 class Sgy:
 
-
     def __init__(self, file_path) -> None:
 
         # 테스트가 필요할 시 속성 변경
@@ -37,10 +36,11 @@ class Sgy:
 
         self._binary = self.load_header_to_df(BINARY_HEADER)
         self.ref_issue()
+        self.BASE_BYTE = self.BASE_BYTE + 400 + (240 * self.EXTENDED_HEADER)
+
 
     def header_to_dataframe(self,mode : Literal["std_trace","ext_trace"]) -> None:
         _header : np.array = None
-
         if mode == "std_trace":
             _header = STANDARD_BASE_HEADER
             self._trace = self.load_header_to_df(_header)
@@ -54,19 +54,16 @@ class Sgy:
             _rows.append({
                 "id": _header["id"],
                 "desc": _header["desc"],
-                "data": self.int_from_byte(self.mm.read(_header["len"]), self.BYTE_ORDER),
+                "data": self.int_from_byte(self.mm.read(_header["len"]), byte_order=self.BYTE_ORDER),
                 "ref": _header["ref"],
             })
         return pd.DataFrame(_rows)
 
-
-
-    # 데이터가 -1 인 경우 가변, ㄴㄴ데이터의 처리 방법을 생각해야함
     def variable_trace_header(self):
         pass
 
-    def int_from_byte(self, b : bytes ,byte_order : Literal["big", "little"] = "big"):
-        return int.from_bytes(b, byteorder=byte_order)
+    def int_from_byte(self, b : bytes, byte_order : Literal["big", "little"] = "big"):
+        return int.from_bytes(b, byteorder=byte_order, signed=True)
     
     def ref_issue(self):
         self.endian_conversion() # 3297
@@ -106,17 +103,21 @@ class Sgy:
 
 
 '''
-1. 변경 필요한 확인 후 적용하는 함수 설계 필요
-2. 확장 헤더가 있을 경우의 헤더 시작점 설정
+1. 일단은 확장 헤더 제외(가변일 경우, 헤더 변환) 작업은 완료
+2. 추가적인 상관 관계에 대한 변환은 확인 필요
+3. 만약 자료팀의 요구사항이 있다면 A에 맞게 최적화 필요
+4. 트레이스의 경우 시각화가 필요한데 이걸 어떻게 처리할지도 확인 필요. 만약 그래픽이 있다면 cuda c를 활용하고 싶은데 어떨지 모르겠네.
+5. 트레이스 데이터의 경우 그냥 단일 인지도 확인 필요
+________________________________________________
 
-# over the ver2
-    big = 1690906010 or little = 6730598510 -> byte_order
-# under the ver2
-    0 and big endian
+5/11 작업 상황
+1. 연관 관계 작업 완료. 부족한 부분 발생 확인을 위하여 추가 데이터 확보
+2. seisee 로 데이터 비교하면서 틀린 값 발견 후 보정, 바이트 변환시 unsigned로 인하여 값 에러 발생
 '''
 
 
 if __name__ == "__main__":
-    sgy = Sgy(r"C:\dev\Code\Interpolation-Seismic-data\SB_M2511_03_Test.sgy")
-    print(sgy._binary)
-    
+    sgy = Sgy(r"C:\dev\Code\Interpolation-Seismic-data\SB_M2511_03_Test_Header.sgy")
+    sgy.header_to_dataframe("std_trace")
+    print(sgy.load_trace_data_to_df())
+    sgy.close()
