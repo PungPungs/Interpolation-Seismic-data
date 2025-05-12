@@ -10,7 +10,7 @@ from pprint import pprint
 class Sgy:
 
     def __init__(self, file_path) -> None:
-
+        np.set_printoptions(suppress=True)
         # 테스트가 필요할 시 속성 변경
         metadata = METADATA()
         self.BYTE_ORDER = metadata.BYTE_ORDER
@@ -30,7 +30,8 @@ class Sgy:
 
         try:
             pprint(self.mm.read(self.BASE_BYTE).decode("ascii"))
-        except:
+        except UnicodeDecodeError:
+            self.mm.seek(0)
             pprint(self.mm.read(self.BASE_BYTE).decode("cp500"))
 
         self.mm.seek(self.BASE_BYTE)
@@ -38,12 +39,26 @@ class Sgy:
         self._binary = pd.DataFrame(columns=["id", "desc","data","ref"])
         self._trace = pd.DataFrame(columns=["id", "desc","data","ref"])
         self._extention = pd.DataFrame(columns=["id", "desc","data","ref"])
+        self._trace_data = pd.DataFrame(columns=["idx","time (ms)","sample"])
 
         self._binary = self.load_header_to_df(BINARY_HEADER)
         self.ref_issue()
         self.BASE_BYTE = self.BASE_BYTE + 400 + (240 * self.EXTENDED_HEADER)
+        self._trace = self.load_header_to_df(STANDARD_BASE_HEADER)
+        _temp = self.load_trace_data_to_df(self.read_trace_data())
+        print(_temp)
 
-
+    def load_trace_data_to_df(self, nd: pd.DataFrame):
+        rows = []
+        _ndtype = self.FORMAT_CODE
+        temp = np.arange(0,len(nd.T),dtype=_ndtype)
+        temp *= self.interval
+        for i in range(len(temp)):
+            rows.append({
+                "index": i,
+                "time (ms)": temp[i],
+            })
+        return pd.DataFrame(rows).join(nd.T)
 
     def header_to_dataframe(self,mode : Literal["std_trace","ext_trace"]) -> None:
         _header : np.array = None
@@ -53,6 +68,8 @@ class Sgy:
         elif mode == "ext_trace":
             pass
 
+
+    ### 추후 고민(전체를 읽고 슬라이싱 or 현 상태 유지)
     def load_header_to_df(self,headers : np.array) -> pd.DataFrame:
         _rows = []
         for _header in headers:
@@ -96,6 +113,8 @@ class Sgy:
         # 판다스 3.0 에서 변경될 문법, 아직 아님
         self._binary["data"].update(ref)
         self._binary.reset_index(inplace=True)
+        self.interval = int(self._binary[self._binary["id"] == 17]["data"].item()) / 1000
+
 
     def endian_conversion(self):
         identifier = self._binary[self._binary["id"] == 97]["data"].iloc[0]
@@ -108,56 +127,53 @@ class Sgy:
     def set_format(self) -> None:
         format_type = self._binary[self._binary["id"] == 25]["data"].iloc[0]
         row = SAMPLING_CODE[SAMPLING_CODE['code'] == format_type]
-        self.FORMAT_CODE = [row["format"],row["byte"]]
+        self.FORMAT_CODE = row["format"].item()
+        self.FORMAT_SIZE = row["byte"].item()
 
     def close(self):
         self.mm.close()
 
 ######################################
-#              test part             #
+####          test part           ####
 ######################################
     # 코드별 상관 관계 설정
     def read_trace_data(self) -> np.ndarray:
+        rows = []
         _endian = '>' if self.BYTE_ORDER == "big" else '<'
-
-        _ndtype = (_endian + self.FORMAT_CODE[0]).item()
-        _byte_size = self.FORMAT_CODE[1].item()
-        _data_trace = (self.DATA_TRACE * _byte_size).item()
-        _total = ((self.TOTAL_SIZE - self.BASE_BYTE) / (_data_trace + 240)).item()
-        print(_total)
+        _ndtype = _endian + self.FORMAT_CODE
+        _byte_size = self.FORMAT_SIZE
+        _data_trace = (self.DATA_TRACE * _byte_size)
+        _total = ((self.TOTAL_SIZE - self.BASE_BYTE) / (_data_trace + 240))
         if isclose(_total % 1, 0.0):
             _total = int(_total)
         else:
             raise ValueError(f"trace 길이 불일치: 총 길이={self.TOTAL_SIZE}, 예상={_total}")
-        
-        traces = np.empty((_total, self.DATA_TRACE), dtype=_ndtype)
-
+    
         for idx in range(_total):
             _base = (self.BASE_BYTE + idx * (240 + _data_trace))
             self.mm.seek(_base + 240)
-            traces[idx] = np.frombuffer(self.mm.read(_data_trace),_ndtype)
-        return traces
+            rows.append(np.frombuffer(self.mm.read(_data_trace),_ndtype))
+        return pd.DataFrame(rows)
 
 
 
 '''
-1. 일단은 확장 헤더 제외(가변일 경우, 헤더 변환) 작업은 완료 .A의 경우 확장 헤더 사용하진 않지만 일단 설정만 해두는걸로
-2. 추가적인 상관 관계에 대한 변환은 확인 필요 (포멧 코드, 에디안 등은 완료)
-3. 만약 자료팀의 요구사항이 있다면 A에 맞게 최적화 필요
-4. 트레이스의 경우 시각화가 필요한데 이걸 어떻게 처리할지도 확인 필요.
-5. 자료를 시간에 맞춰서 순서를 잡는데, 만약 4채널일 경우 입력 4개 출력이 4개 필요, 만약 11168이면 11168이 필요한 것
-    1. 인위적으로 맞추는 건 즉 시간에 따른 시작점을 잡는건데 동시 다발적으로 들어가서 행렬곱을 수행하면 어차피 모든 상관 관계를 확인하는거니까 문제는 없을 듯
-    2. 다른 참조 사항이 있으면 이건 어떻게 설정해주는거냐인데...
-6. 라인수가 몇 개 인지 넘겨야한다는 점도 확인 필요
+### 최종 목적
+1. 피킹 : 오토 피킹, 수 많은 물리학자들이 시도하였고 다양한 방법이 있겠지만 나라고 못할끼? 나도 할 수 있다.
+________________________________________________
+### 문제점
+1. 코드가 너무 난잡한 거 같다. 이걸 버전 1로 두고 버전 2를 개발해야하는지 아니면 바로 리펙토링을 할지 모르겠다. 분명히 공부는 되기는 하였으나 너무 복잡하게 얽혀있다.
+2. 각각의 객체가 책임을 많이 진다. 또한 너무 응집도가 강해 하나 수정시 전체가 영향을 받을 듯 하다.
+3. 너무 쓸모 없는 변수들의 생성과 효율적이지 않는 구조 같다. 1번과 같이 고려하여 생각해보자
 ________________________________________________
 
 5/11 작업 상황
 1. 바이너리 헤더, 트레이스 헤더, 트레이스 데이터 전부 넘파이를 이용하여 텍스트화 완료. A에서 따로 csv는 필요 없다고 하여 패스. 용량이 3배 증가
 2. 이제 attention or 일반 신경망을 이용하여 피킹값 예측 필요
+
 '''
 
 
 if __name__ == "__main__":
     sgy = Sgy(r"241115_073433_795565.sgy")
-    sgy.header_to_dataframe("std_trace")
     sgy.close()
