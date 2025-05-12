@@ -10,7 +10,7 @@ class _dtype:
 
     FORMAT_CODE = np.dtype([
         ("code", np.uint8),
-        ("format", "U150"),
+        ("format", "U20"),
         ("byte",np.uint8)
     ])
 

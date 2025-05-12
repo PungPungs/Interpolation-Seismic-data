@@ -1,8 +1,9 @@
-from typing import List, Literal
+from typing import List, Literal, Optional
 import pandas as pd
 import numpy as np
 import mmap
 from header import BINARY_HEADER, STANDARD_BASE_HEADER, SAMPLING_CODE, METADATA, CONDITION
+from math import isclose
 
 
 
@@ -17,10 +18,14 @@ class Sgy:
         self.BASE_BYTE = metadata.BASE_BYTE
         self.DATA_TRACE = metadata.DATA_TRACE
         self.VER = metadata.VER
-
+        self.TOTAL_SIZE = None
         self.file_path : str = file_path
+        self.FORMAT_CODE = []
+
+
         with open(self.file_path, "rb") as sgy:
             self.mm = mmap.mmap(sgy.fileno(), 0, access=mmap.ACCESS_READ)
+            self.TOTAL_SIZE = self.mm.size()
         self.mm.seek(0)
 
         try:
@@ -37,6 +42,7 @@ class Sgy:
         self._binary = self.load_header_to_df(BINARY_HEADER)
         self.ref_issue()
         self.BASE_BYTE = self.BASE_BYTE + 400 + (240 * self.EXTENDED_HEADER)
+
 
 
     def header_to_dataframe(self,mode : Literal["std_trace","ext_trace"]) -> None:
@@ -67,6 +73,7 @@ class Sgy:
     
     def ref_issue(self):
         self.endian_conversion() # 3297
+        self.set_format()
         ref = self._binary[self._binary["ref"]].set_index("id")["data"].copy()
         
         ## 속성 확인
@@ -98,8 +105,42 @@ class Sgy:
         else:
             self.VER = 1
 
+    def set_format(self) -> None:
+        format_type = self._binary[self._binary["id"] == 25]["data"].iloc[0]
+        row = SAMPLING_CODE[SAMPLING_CODE['code'] == format_type]
+        self.FORMAT_CODE = [row["format"],row["byte"]]
+
     def close(self):
         self.mm.close()
+
+
+
+
+
+######################################
+#              test part             #
+######################################
+    # 코드별 상관 관계 설정
+    def read_trace_data(self):
+        _endian = '>' if self.BYTE_ORDER == "big" else '<'
+
+        _ndtype = (_endian + self.FORMAT_CODE[0]).item()
+        _byte_size = self.FORMAT_CODE[1].item()
+        _data_trace = (self.DATA_TRACE * _byte_size).item()
+        _total = ((self.TOTAL_SIZE - self.BASE_BYTE) / (_data_trace + 240)).item()
+        if isclose(_total % 1, 0.0):
+            _total = int(_total)
+        else:
+            raise ValueError(f"trace 길이 불일치: 총 길이={self.TOTAL_SIZE}, 예상={_total}")
+        
+        traces = np.empty((_total, self.DATA_TRACE), dtype=_ndtype)
+
+        for idx in range(_total):
+            _base = (self.BASE_BYTE + idx * (240 + _data_trace))
+            self.mm.seek(_base + 240)
+            traces[idx] = np.frombuffer(self.mm.read(_data_trace),_ndtype)
+        return traces
+
 
 
 '''
@@ -117,7 +158,8 @@ ________________________________________________
 
 
 if __name__ == "__main__":
-    sgy = Sgy(r"C:\dev\Code\Interpolation-Seismic-data\SB_M2511_03_Test_Header.sgy")
+    sgy = Sgy(r"C:\DEV\Code\Python\Interpolation-Seismic-data\sgy\SB_M2511_03_Test_Header.sgy")
     sgy.header_to_dataframe("std_trace")
-    print(sgy.load_trace_data_to_df())
+    print(sgy.read_trace_data())
+    print(len(sgy.read_trace_data()))
     sgy.close()

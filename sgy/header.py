@@ -57,7 +57,7 @@ BINARY_HEADER = np.array([
     (19, "Sample interval of original field recording.", 2, False),
     (21, "Number of samples per data trace. (Primary data)", 2, True),
     (23, "Number of samples per data trace for original field recording.", 2, False),
-    (25, "Data sample format code.", 2, False),
+    (25, "Data sample format code.", 2, True),
     (27, "Ensemble fold — The expected number of data traces per trace ensemble", 2, False),
     (29, "Trace sorting code. Type of ensemble sorting.", 2, False),
     (31, "Vertical sum code. N = M-1 sum, M in 2~32767.", 2, False),
@@ -186,20 +186,20 @@ STANDARD_BASE_HEADER = np.array([
 ], dtype =  _dtype.BASE_HEADER)
 
 SAMPLING_CODE = np.array([
-    (1,  "4-byte IBM floating-point",             4),
-    (2,  "4-byte, two's complement integer",      4),
-    (3,  "2-byte, two's complement integer",      2),
-    (4,  "4-byte fixed-point with gain (obsolete)", 4),
-    (5,  "4-byte IEEE floating-point",            4),
-    (6,  "8-byte IEEE floating-point",            8),
-    (7,  "3-byte two’s complement integer",       3),
-    (8,  "1-byte, two's complement integer",      1),
-    (9,  "8-byte, two's complement integer",      8),
-    (10, "4-byte, unsigned integer",              4),
-    (11, "2-byte, unsigned integer",              2),
-    (12, "8-byte, unsigned integer",              8),
-    (15, "3-byte, unsigned integer",              3),
-    (16, "1-byte, unsigned integer",              1),
+    (1,  "f4", 4),
+    (2,  "i4", 4),
+    (3,  "i2", 2),
+    # (4,  "4-byte fixed-point with gain (obsolete)", 4),
+    (5,  "f4", 4),
+    (6,  "f8", 8),
+    (7,  "i3", 3),
+    (8,  "i2", 1),
+    (9,  "i8", 8),
+    (10, "u4", 4),
+    (11, "u2", 2),
+    (12, "u8", 8),
+    (15, "u3", 3),
+    (16, "u1",  1),
 ], dtype = _dtype.FORMAT_CODE)
 
 
