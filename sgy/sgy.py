@@ -4,7 +4,7 @@ import numpy as np
 import mmap
 from header import BINARY_HEADER, STANDARD_BASE_HEADER, SAMPLING_CODE, METADATA, CONDITION
 from math import isclose
-
+from pprint import pprint
 
 
 class Sgy:
@@ -29,9 +29,9 @@ class Sgy:
         self.mm.seek(0)
 
         try:
-            self.mm.read(self.BASE_BYTE).decode("ascii")
+            pprint(self.mm.read(self.BASE_BYTE).decode("ascii"))
         except:
-            self.mm.read(self.BASE_BYTE).decode("cp500")
+            pprint(self.mm.read(self.BASE_BYTE).decode("cp500"))
 
         self.mm.seek(self.BASE_BYTE)
 
@@ -113,21 +113,18 @@ class Sgy:
     def close(self):
         self.mm.close()
 
-
-
-
-
 ######################################
 #              test part             #
 ######################################
     # 코드별 상관 관계 설정
-    def read_trace_data(self):
+    def read_trace_data(self) -> np.ndarray:
         _endian = '>' if self.BYTE_ORDER == "big" else '<'
 
         _ndtype = (_endian + self.FORMAT_CODE[0]).item()
         _byte_size = self.FORMAT_CODE[1].item()
         _data_trace = (self.DATA_TRACE * _byte_size).item()
         _total = ((self.TOTAL_SIZE - self.BASE_BYTE) / (_data_trace + 240)).item()
+        print(_total)
         if isclose(_total % 1, 0.0):
             _total = int(_total)
         else:
@@ -144,22 +141,23 @@ class Sgy:
 
 
 '''
-1. 일단은 확장 헤더 제외(가변일 경우, 헤더 변환) 작업은 완료
-2. 추가적인 상관 관계에 대한 변환은 확인 필요
+1. 일단은 확장 헤더 제외(가변일 경우, 헤더 변환) 작업은 완료 .A의 경우 확장 헤더 사용하진 않지만 일단 설정만 해두는걸로
+2. 추가적인 상관 관계에 대한 변환은 확인 필요 (포멧 코드, 에디안 등은 완료)
 3. 만약 자료팀의 요구사항이 있다면 A에 맞게 최적화 필요
-4. 트레이스의 경우 시각화가 필요한데 이걸 어떻게 처리할지도 확인 필요. 만약 그래픽이 있다면 cuda c를 활용하고 싶은데 어떨지 모르겠네.
-5. 트레이스 데이터의 경우 그냥 단일 인지도 확인 필요
+4. 트레이스의 경우 시각화가 필요한데 이걸 어떻게 처리할지도 확인 필요.
+5. 자료를 시간에 맞춰서 순서를 잡는데, 만약 4채널일 경우 입력 4개 출력이 4개 필요, 만약 11168이면 11168이 필요한 것
+    1. 인위적으로 맞추는 건 즉 시간에 따른 시작점을 잡는건데 동시 다발적으로 들어가서 행렬곱을 수행하면 어차피 모든 상관 관계를 확인하는거니까 문제는 없을 듯
+    2. 다른 참조 사항이 있으면 이건 어떻게 설정해주는거냐인데...
+6. 라인수가 몇 개 인지 넘겨야한다는 점도 확인 필요
 ________________________________________________
 
 5/11 작업 상황
-1. 연관 관계 작업 완료. 부족한 부분 발생 확인을 위하여 추가 데이터 확보
-2. seisee 로 데이터 비교하면서 틀린 값 발견 후 보정, 바이트 변환시 unsigned로 인하여 값 에러 발생
+1. 바이너리 헤더, 트레이스 헤더, 트레이스 데이터 전부 넘파이를 이용하여 텍스트화 완료. A에서 따로 csv는 필요 없다고 하여 패스. 용량이 3배 증가
+2. 이제 attention or 일반 신경망을 이용하여 피킹값 예측 필요
 '''
 
 
 if __name__ == "__main__":
-    sgy = Sgy(r"C:\DEV\Code\Python\Interpolation-Seismic-data\sgy\SB_M2511_03_Test_Header.sgy")
+    sgy = Sgy(r"241115_073433_795565.sgy")
     sgy.header_to_dataframe("std_trace")
-    print(sgy.read_trace_data())
-    print(len(sgy.read_trace_data()))
     sgy.close()
