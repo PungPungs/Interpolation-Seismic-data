@@ -39,13 +39,27 @@ from dtype import _dtype
 from dataclasses import dataclass
 from typing import Literal
 
-@dataclass
-class METADATA:
-    BYTE_ORDER : Literal["big", "little"] = "big"
-    EXTENDED_HEADER : int = 0
-    BASE_BYTE : int = 3200
-    DATA_TRACE : int = 0
-    VER : int = 2
+class META_DATA:
+    SEGY_META_DATA = {
+        # default        
+        "Binary_header_length" : int,
+        "Std_trace_header_length" : int,
+        "VER" : int,
+
+        # read and refresh
+        "Encoding_type" : str, # error_check
+        "Num_of_trace" : int, # binary 13 ~ 14
+        "Num_of_Sample" : int, # binary 21 ~ 22
+        "Format_type" : str, # binary 25 ~ 26
+        "Endian" : str, # binary 97 ~ 100
+        "Num_of_Extended" : int, # binary 305 ~ 306,
+    }
+
+    SEGY_HEADER_DATA = {
+        "Text_Header" : np.ndarray,
+        "Binary_Header" : np.ndarray,
+        "Std_Trace_Header" : np.ndarray,
+    }
 
 BINARY_HEADER = np.array([
     (1, "Job identification number.", 4, False),

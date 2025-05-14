@@ -4,7 +4,7 @@ class _dtype:
     BASE_HEADER = np.dtype([
         ("id", np.uint16),
         ("desc", "U100"),
-        ("len", np.uint8),
+        ("len", np.uint16),
         ("ref", np.bool_)
     ])
 
@@ -18,3 +18,6 @@ class _dtype:
         ("id" , np.uint16),
         ("ref_id", np.int16) 
     ])
+
+
+
