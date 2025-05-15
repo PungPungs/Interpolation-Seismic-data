@@ -28,14 +28,24 @@ class SEGYReader:
 
     def __init__(self, file_path):
         np.set_printoptions(suppress=True)
+
         self.file_path = file_path
         self.text_header = ""
-        self.binary_header = pd.DataFrame()
-        self.trace_header = pd.DataFrame()
+        self.total_size = 0
         self.encoding = "ascii"
+        self.channel : int = 0
+        self.time_index : List = []
+        self.interval : int = 0
+        self.total_size : int = 0
+        self.num_of_sample : int = 0
+
+        self.binary_header = pd.DataFrame()
+        self.bin_trace_header : bytes
+        self.bin_trace_samples : bytes
 
         with open(self.file_path, "rb") as f:
             self.mm = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+        self.total_size = self.mm.size()
         # 정보 취득을 위한 기본 헤더 읽기 : 필수
         self._read_headers()
         # 이후 기타 세팅을 위한 정보 읽기 : 필수
@@ -86,11 +96,9 @@ class SEGYReader:
 
         if self.interval != 0:
             self.time_index = np.arange(0, self.num_of_sample) * (self.interval / 1000)
-            print(self.time_index)
         
     def read_trace(self):
-        self.total_size = self.mm.size()
-        step = 240 + self.num_of_sample * 4
+        step = 240 + self.num_of_sample * self.trace_format_size
         trace_data_size = self.total_size - self.TRACE_START
 
         if step <= 0:
@@ -102,14 +110,16 @@ class SEGYReader:
 
         self.mm.seek(self.TRACE_START)
         b = self.mm.read(trace_data_size)
-        self.trace_header, self.samples = self.split_trace_data(b)
+        self.bin_trace_header, self.bin_trace_samples = self.split_trace_data(b)
     
     # numpy 배열로 받고 필요할 때 마다 라인별로 읽기
     def split_trace_data(self, b : bytes) -> Tuple[np.ndarray, np.ndarray]:
         step = self.TRACE_HEADER_LENGTH + self.num_of_sample * self.trace_format_size
         raw = np.frombuffer(b, dtype=np.uint8).reshape((-1, step))
         header = raw[:, :self.TRACE_HEADER_LENGTH]
+        print(header.shape)
         sample =  raw[:, self.TRACE_HEADER_LENGTH:]
+        print(sample.shape)
         return header, sample
         
 
@@ -118,22 +128,49 @@ class SEGYReader:
     
 
     def stream_trace_header(self, ch : int, to_csv : bool = False) -> pd.DataFrame:
-        end_line = len(self.trace_header)
-        if ch == 0 or ch == end_line:
+        end_line = len(self.bin_trace_header)
+        if ch <= 0 or ch > len(end_line):
             raise ValueError(f"trace 범위 : 1 ~ {end_line}")
-        _data = self.trace_header[ch-1]
+        _data = self.bin_trace_header[ch-1]
         line_header = self._parse_header(_data,'trace')
         if to_csv == True:
             line_header.to_csv(f"line_{ch}.csv")
         return line_header
     
     def stream_trace_data(self, ch : int, to_csv : bool):
-        pass
+        end_line = len(self.bin_trace_samples)
+        idx = ch - 1
+        if ch <= 0 or ch > len(end_line):
+            raise ValueError(f"trace 범위 : 1 ~ {end_line}")
+        sample = (self.bin_trace_samples[idx])
+        line_trace = np.frombuffer(sample,dtype=f">{self.trace_format}")
+        temp = pd.DataFrame({
+            "Time(ms)" : self.time_index, 
+            "Sample" : line_trace
+            }, dtype=f"float32")
+        temp.index += 1
+        if to_csv == True:
+            temp.to_csv(f"trace{ch}.csv")
+        return temp
+        
 ### 작업 전
     def all_parse_header(self,b : np.ndarray):
         row = []
         for _b in b:
             row.append(self._parse_header(_b.tobytes(), 'trace'))
+
+    def info(self):
+        metadata = {
+            "file_path" : self.file_path,
+           "total_size" : self.total_size,
+            "text_header" : self.text_header,
+            "total_size" : self.total_size,
+            "encoding" : self.encoding ,
+            "channel" : self.channel,
+           "time_index" : self.time_index,
+           "interval" : self.interval,
+           "num_of_sample": self.num_of_sample,
+        }
 
 '''
 ### 추가 작업 필요 사항
@@ -141,6 +178,5 @@ class SEGYReader:
 '''
 
             
-a = SEGYReader(r"SB_M2511_03_Test_Header.sgy")
-print((a.trace_header))
-print((a.stream_trace_header(4, True)))
+a = SEGYReader(r"241115_073433_795565.sgy")
+
