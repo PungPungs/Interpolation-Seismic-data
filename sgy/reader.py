@@ -4,6 +4,7 @@ import pandas as pd
 import struct
 from header import BINARY_HEADER, STANDARD_BASE_HEADER, SAMPLING_CODE
 from typing import Literal, Tuple, List, Union
+import re
 
 class SEGYReader:
     TEXT_HEADER_END = 3200
@@ -17,8 +18,12 @@ class SEGYReader:
         6: 'hi',
         8: 'q',
     }
-
-
+    n_signed_fmt : dict[int,str] = {
+        1: 'i',
+        2: 'i2',
+        4: 'i4',
+        8: 'i8',
+    }
 
     read_header : dict[str,List] = {
         "text": [0, TEXT_HEADER_END],
@@ -71,6 +76,7 @@ class SEGYReader:
         except UnicodeDecodeError:
             return b.decode("cp500"), "cp500"
 
+    # 바꿔야겠다. 넘파이 방식으로
     def _parse_header(self, b: bytes, kind: Literal["binary", "trace"]):
         header_def = BINARY_HEADER if kind == "binary" else STANDARD_BASE_HEADER
         rows = []
@@ -100,14 +106,11 @@ class SEGYReader:
     def read_trace(self):
         step = 240 + self.num_of_sample * self.trace_format_size
         trace_data_size = self.total_size - self.TRACE_START
-
         if step <= 0:
             return None
-
         if trace_data_size % step != 0:
             raise ValueError("트레이스 길이가 맞지 않습니다.")
         self.channel = trace_data_size // step
-
         self.mm.seek(self.TRACE_START)
         b = self.mm.read(trace_data_size)
         self.bin_trace_header, self.bin_trace_samples = self.split_trace_data(b)
@@ -117,19 +120,12 @@ class SEGYReader:
         step = self.TRACE_HEADER_LENGTH + self.num_of_sample * self.trace_format_size
         raw = np.frombuffer(b, dtype=np.uint8).reshape((-1, step))
         header = raw[:, :self.TRACE_HEADER_LENGTH]
-        print(header.shape)
         sample =  raw[:, self.TRACE_HEADER_LENGTH:]
-        print(sample.shape)
         return header, sample
-        
-
-    def all_parse_sample(self,b : np.ndarray):
-        return np.frombuffer(b.tobytes(), dtype= f">{self.trace_format}").reshape((-1, self.num_of_sample))
-    
 
     def stream_trace_header(self, ch : int, to_csv : bool = False) -> pd.DataFrame:
         end_line = len(self.bin_trace_header)
-        if ch <= 0 or ch > len(end_line):
+        if ch <= 0 or ch > end_line:
             raise ValueError(f"trace 범위 : 1 ~ {end_line}")
         _data = self.bin_trace_header[ch-1]
         line_header = self._parse_header(_data,'trace')
@@ -137,7 +133,7 @@ class SEGYReader:
             line_header.to_csv(f"line_{ch}.csv")
         return line_header
     
-    def stream_trace_data(self, ch : int, to_csv : bool):
+    def stream_trace_data(self, ch : int, to_csv : bool) -> pd.DataFrame:
         end_line = len(self.bin_trace_samples)
         idx = ch - 1
         if ch <= 0 or ch > len(end_line):
@@ -153,13 +149,9 @@ class SEGYReader:
             temp.to_csv(f"trace{ch}.csv")
         return temp
         
-### 작업 전
-    def all_parse_header(self,b : np.ndarray):
-        row = []
-        for _b in b:
-            row.append(self._parse_header(_b.tobytes(), 'trace'))
 
-    def info(self):
+
+    def info(self) -> pd.DataFrame:
         metadata = {
             "file_path" : self.file_path,
            "total_size" : self.total_size,
@@ -171,12 +163,40 @@ class SEGYReader:
            "interval" : self.interval,
            "num_of_sample": self.num_of_sample,
         }
+        return pd.DataFrame(metadata)
+
+    def parse_text_header(self):
+        parse_data = (re.split(r"(?=C\s?\d?\d)", self.text_header))
+        return pd.DataFrame({"3200-byte Textual File Header" : parse_data})
+    
+    def load_all_header(self, b : np.ndarray) -> pd.DataFrame:
+        row = []
+        header_def = STANDARD_BASE_HEADER
+        for h in header_def:
+            start = h["id"].item() - 1
+            end = start + h["len"]
+            fmt = self.n_signed_fmt.get(h["len"])
+            if fmt == None:
+                row.append([[],[],[],[]])
+                continue
+            row.append(np.frombuffer(b[:, start:end].tobytes(), dtype=f">{fmt}"))
+            idx = [f"ch_{_}" for _ in range(1,self.channel + 1)]
+        return pd.DataFrame(row, columns=idx).to_csv("tester.csv")
+
+    def load_all_data(self, b : np.ndarray) -> pd.DataFrame:
+        '''데이터가 클수록 오래 걸림'''
+        row = []
+        row.append(np.frombuffer(b.tobytes(),dtype=f">{self.trace_format}"))
+        return pd.DataFrame(row)
 
 '''
+
 ### 추가 작업 필요 사항
 코드 별 포멧 확인
+C 1 CLIENT                        COMPANY                       CREW NO         
 '''
 
             
-a = SEGYReader(r"241115_073433_795565.sgy")
 
+a = SEGYReader(r"SB_M2511_03_Test_Header.sgy")
+b = (a.load_all_data(a.bin_trace_samples))
