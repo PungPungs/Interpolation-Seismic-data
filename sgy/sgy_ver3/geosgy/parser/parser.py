@@ -1,3 +1,4 @@
+import re
 import numpy as np
 from typing import Tuple
 from dataclasses import dataclass
@@ -5,8 +6,8 @@ from dataclasses import dataclass
 # 엔트리포인트 설계를 위한 데이터클래스
 @dataclass
 class ParsedResult:
-    header : np.ndarray
-    sample : np.ndarray
+    header : np.ndarray = None
+    sample : np.ndarray = None
     meta : dict = None
 
     
@@ -23,6 +24,7 @@ class Parser:
         temp = np.frombuffer(b,"uint8").reshape(-1,trace_length)
         header, sample = temp[:240], temp[240:]
         self._trace_data = {"header" : header, "sample" : sample}
+        # return ParsedResult(header=header, sample=sample)
 
     def _parse_trace_headers(self, header_df) -> np.ndarray:
         headers = self._trace_data.get("header")
@@ -51,3 +53,16 @@ class Parser:
                 temp = b[start : start + size]
             raw.append(np.frombuffer(temp.tobytes(),fmt))
         return np.stack(raw, axis=0)
+    
+    def _parse_text_header(self,b : bytes):
+        try:
+            t_head = b.decode("ascii")
+            encode = "ascii"
+        except UnicodeDecodeError:
+            t_head = b.decode("cp500")
+            encode = "cp500"
+        temp = re.split(r"(?=C\s?\d?\d)", t_head)
+        return temp
+
+
+        
