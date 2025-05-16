@@ -150,16 +150,13 @@ class SEGYReader:
         return temp
         
 
-
+    # 수정 필요
     def info(self) -> pd.DataFrame:
         metadata = {
             "file_path" : self.file_path,
-           "total_size" : self.total_size,
-            "text_header" : self.text_header,
             "total_size" : self.total_size,
-            "encoding" : self.encoding ,
+            "encoding" : self.encoding,
             "channel" : self.channel,
-           "time_index" : self.time_index,
            "interval" : self.interval,
            "num_of_sample": self.num_of_sample,
         }
@@ -187,8 +184,10 @@ class SEGYReader:
         '''데이터가 클수록 오래 걸림'''
         row = []
         row.append(np.frombuffer(b.tobytes(),dtype=f">{self.trace_format}"))
-        return pd.DataFrame(row)
-
+        # return pd.DataFrame(row)
+        idx = [f"ch_{_}" for _ in range(1,self.channel + 1)]
+        a = pd.DataFrame(row, dtype="float32", columns=idx)
+        print(a.info())
 '''
 
 ### 추가 작업 필요 사항
@@ -199,4 +198,4 @@ C 1 CLIENT                        COMPANY                       CREW NO
             
 
 a = SEGYReader(r"SB_M2511_03_Test_Header.sgy")
-b = (a.load_all_data(a.bin_trace_samples))
+print(a.info())
