@@ -1,5 +1,5 @@
 import mmap
-from typing import Literal
+from typing import Tuple
 from ..parser.parser import Parser
 
 
@@ -10,7 +10,6 @@ byte_addr = {
 
 class Reader:
     def __init__(self, file_path : str):
-        self.parser = Parser()
         with open(file_path, "rb") as f:
             self.mm = mmap.mmap(f.fileno(),0,access=mmap.ACCESS_READ)
 
@@ -19,7 +18,7 @@ class Reader:
         return self.mm.read(length)
 
 
-    def read_default(self) -> bytes:
+    def read_default(self) -> Tuple[bytes, bytes]:
         text = byte_addr.get("text")
         binary = byte_addr.get("binary")
         t = self.read_arrange(*text)

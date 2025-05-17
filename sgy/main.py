@@ -1,4 +1,7 @@
-from sgy_ver3.segy import SEGY
+from sgy_ver3.geosgy import Reader,Parser,Feature_Extractor
 
 
-sgy = SEGY(r"241115_073433_795565.sgy")
+reader = Reader(r"C:\dev\Code\Interpolation-Seismic-data\sgy\241115_073433_795565.sgy")
+text, header = reader.read_default()
+parser = Parser(text, header)
+print(parser.headers)

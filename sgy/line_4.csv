@@ -1,0 +1,88 @@
+,id,desc,data
+0,1,Trace sequence number within line,4
+1,5,Trace sequence number within SEG-Y file,4
+2,9,Original field record number,-1527439917
+3,13,Trace number within the original field record,4
+4,17,Energy source point number,0
+5,21,"Ensemble number (i.e. CDP, CMP, CRP, etc.)",0
+6,25,Trace number within the ensemble,4
+7,29,Trace identification code,1
+8,31,Number of vertically summed traces yielding this trace,0
+9,33,Number of horizontally stacked traces yielding this trace,0
+10,35,Data use,0
+11,37,Distance from center of the source point to the center of the receiver group ,0
+12,41,Elevation of receiver group,0
+13,45,Surface elevation at source location,0
+14,49,Source depth below surface,0
+15,53,Seismic Datum elevation at receiver group,0
+16,57,Seismic Datum elevation at source,0
+17,61,Water column height at source location,0
+18,65,Water column height at receiver group location,0
+19,69,Scalar to be applied to all elevations and depths specified in Standard Trace Header bytes 41~68 to ,0
+20,71,Scalar to be applied to all coordinates specified in Standard Trace Header bytes 73~88 and to bytes ,-1000
+21,73,Source coordinate - X,0
+22,77,Source coordinate - Y,0
+23,81,Group coordinate - X,0
+24,85,Group coordinate - Y,0
+25,89,Coordinate units,2
+26,91,Weathering velocity,0
+27,93,Subweathering velocity,0
+28,95,Uphole time at source in milliseconds,0
+29,97,Uphole time at group in milliseconds,0
+30,99,Source static correction in milliseconds,0
+31,101,Group static correction in milliseconds,0
+32,103,Total static applied in milliseconds,0
+33,105,Lag time A — Time in milliseconds between end of 240-byte trace identification header and time break,0
+34,107,Lag Time B — Time in milliseconds between time break and the initiation time of the energy source,0
+35,109,Delay recording time,0
+36,111,Mute time — Start time in milliseconds,0
+37,113,Mute time — End time in milliseconds,0
+38,115,Number of samples in this trace,4480
+39,117,Sample interval for this trace,16
+40,119,Gain type of field instruments,0
+41,121,Instrument gain constant (dB),0
+42,123,Instrument early or initial gain (dB),0
+43,125,Correlated,0
+44,127,Sweep frequency at start (Hz),0
+45,129,Sweep frequency at end (Hz),0
+46,131,Sweep length in milliseconds,0
+47,133,Sweep type,0
+48,135,Sweep trace taper length at start in milliseconds,0
+49,137,Sweep trace taper length at end in milliseconds,0
+50,139,Taper type,0
+51,141,"Alias filter frequency (Hz), if used",0
+52,143,Alias filter slope (dB/octave),0
+53,145,"Notch filter frequency (Hz), if used",0
+54,147,Notch filter slope (dB/octave),0
+55,149,"Low-cut frequency (Hz), if used",0
+56,151,"High-cut frequency (Hz), if used",0
+57,153,Low-cut slope (dB/octave),0
+58,155,High-cut slope (dB/octave),0
+59,157,Year data recorded,2024
+60,159,Day of year,320
+61,161,Hour of day (24-hour clock),7
+62,163,Minute of hour,34
+63,165,Second of minute,33
+64,167,Time basis code,2
+65,169,Trace weighting factor,0
+66,171,Geophone group number of roll switch position one,0
+67,173,Geophone group number of trace number one within original field record,0
+68,175,Geophone group number of last trace within original field record,0
+69,177,Gap size,0
+70,179,Over travel associated with taper at beginning or end of line,0
+71,181,X coordinate of ensemble (CDP) position of this trace ,0
+72,185,Y coordinate of ensemble (CDP) position of this trace,0
+73,189,"For 3-D poststack data, this field should be used for the in-line number",0
+74,193,For 3-D poststack data,0
+75,197,Shotpoint number,0
+76,201,Scalar to be applied to the shotpoint number in Standard Trace Header bytes 197~200 to give the real,0
+77,203,Trace value measurement unit,0
+78,205,Transduction Constant,4294967298
+79,211,Transduction Unit,2
+80,213,Device/Trace Identifier ,4146
+81,215,Scalar to be applied to times specified in Trace Header bytes 95~114 to give the true time value in ,1
+82,217,Source Type/Orientation,0
+83,219,Source Energy Direction with respect to the source orientation,0
+84,225,Source Measurement,0
+85,231,Source Measurement Unit,0
+86,233,Either binary zeros or the eight-character trace header name “SEG00000”. May be ASCII or EBCDIC text,3416925656842240
