@@ -1,29 +1,30 @@
 import mmap
-from typing import Tuple
-from ..parser.parser import Parser
+import numpy as np
 
-
-byte_addr = {
-    "text" : [0,3200],
-    "binary" : [3200, 3600],
-}
+TRACE_START = 3600
 
 class Reader:
-    def __init__(self, file_path : str):
+
+    def __init__(self, file_path):
         with open(file_path, "rb") as f:
             self.mm = mmap.mmap(f.fileno(),0,access=mmap.ACCESS_READ)
+        self.total = self.mm.size()
 
-    def read_arrange(self, start : int, length : int) -> bytes:
-        self.mm.seek(start)
-        return self.mm.read(length)
-
-
-    def read_default(self) -> Tuple[bytes, bytes]:
-        text = byte_addr.get("text")
-        binary = byte_addr.get("binary")
-        t = self.read_arrange(*text)
-        b = self.read_arrange(*binary)
-        return t,b
-
-    def __del__(self) -> None:
+    def __del__(self):
         self.mm.close()
+
+    def read_header(self):
+        self.mm.seek(0)
+        return np.frombuffer(self.mm.read(3600), dtype="uint8")
+    
+    def read_trace(self):
+        self.mm.seek(TRACE_START)
+        trace_size = self.total - TRACE_START
+        return self.mm.read(trace_size)
+
+    # def read_header(self):
+    #     raw = []
+    #     for start, length in self.header_map:
+    #         self.mm.seek(start)
+    #         raw.append(self.mm.read(length))
+    #     return raw

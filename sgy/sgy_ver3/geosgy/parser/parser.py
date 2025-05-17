@@ -1,78 +1,54 @@
 import re
 import numpy as np
-from typing import Tuple
-from dataclasses import dataclass
-from ..config.format_def import BINARY_HEADER, TRACE_HEADER,HEADER_DTYPE_MAP
+from ..config.format_def import BINARY_HEADER, TRACE_HEADER
+from ..config.dtype import _dtype
+from typing import Literal
+import pandas as pd
 
-# 엔트리포인트 설계를 위한 데이터클래스
-@dataclass
-class ParsedResult:
-    text_header : str = None
-    binary_header : np.ndarray = None
-    trace_header : np.ndarray = None
-    sample : np.ndarray = None
-    meta : dict = None
-
-# header
-# id, desc, len
+REGULAR = r"(?=C\s?\d?\d)"
 
 class Parser:
-    # 읽고 텍스트 및 바이너리 헤더 파싱, 만약 필요한 정보가 없다면 트레이스 데이터 하나 파싱.
-    def __init__(self , text, binary):
-        self.encode = None
-        self.headers = {
-            "head" : self._parse_text_header(text),
-            "binary" : self._parser_binary(binary)
+    def __init__(self):
+        self.decode : str = ""
+
+    def parsed_trace(self, trace, n):
+        length = 240 + (4 * n)
+        b = np.frombuffer(trace,dtype=np.uint8).reshape((-1,length))
+        th, sp = b[:,:240], b[:,240:]
+        raw = {
+            "trace_header" : self.__parse_header(th.tobytes(),'trace'),
+            "samples" : np.frombuffer(sp.tobytes(),dtype=">f4")
         }
+        print(raw)
 
-    def _parse_text_header(self,b : bytes):
+    def parsed_headers(self, headers : np.ndarray) -> np.ndarray:
         try:
-            t_head = b.decode("ascii")
-            self.encode = "ascii"
+            text, self.decode = headers[:3200].tobytes().decode("ascii"), "ascii"
         except UnicodeDecodeError:
-            t_head = b.decode("cp500")
-            self.encode = "cp500"
-        temp = re.split(r"(?=C\s?\d?\d)", t_head)
-        return temp
+            text, self.decode = headers[:3200].tobytes().decode("cp500"), "cp500"
+        binary = headers[3200:]
+        raw = {
+            "textual" : re.split(REGULAR,text),
+            "binary" : self.__parse_header(binary, kind="binary")
+        }
+        return raw
     
-    def _parser_binary(self, b : bytes) -> np.ndarray:
-        return self._parse_header(b,BINARY_HEADER)
 
-    def _split_header_sample(self, b : bytes, trace_length : int) -> None:
-        temp = np.frombuffer(b,"uint8").reshape(-1,trace_length)
-        header, sample = temp[:,:240], temp[:,240:]
-        self._trace_data = {"header" : header, "sample" : sample}
-
-    def _parse_trace_headers(self) -> np.ndarray:
-        headers = self._trace_data.get("header")
-        if headers is None:
-            raise ValueError(f"headers had no data")
-        return np.stack(self._parse_header(headers,TRACE_HEADER), axis=0)
-
-    # format 이 필요해~
-    def _parse_trace_samples(self) -> np.ndarray:
-        samples = self._trace_data.get("sample")
-        if samples is None:
-            raise ValueError(f"samples had no data")
-        return np.frombuffer(samples.tobytes(),dtype=">f4")
-    
-    def _parse_header(self, b : bytes | np.ndarray, header_df) -> np.ndarray:
-        if not isinstance(b,np.ndarray):
-            b = np.frombuffer(b, "uint8")          
+    ### 헤더 전용
+    def __parse_header(self, b : bytes, kind : Literal["binary", "trace"]):
         raw = []
+        print(kind)
+        if kind == "binary":
+            header_df = BINARY_HEADER
+        else:
+            header_df = TRACE_HEADER
         for h in header_df:
             start = h["id"] - 1
-            size = h["len"]
-            fmt = HEADER_DTYPE_MAP.get(size)
-
-            if b.ndim == 2:
-                temp = b[:, start : start + size]
-            else:
-                temp = b[start : start + size]
-            if fmt == 6:
-                continue    
-            raw.append(np.frombuffer(temp.tobytes(),fmt))
-        return np.stack(raw, axis=0)
-
-
-        
+            length = h["len"]
+            temp = int.from_bytes(b[start : start + length],"big",signed=h["signed"])
+            raw.append((
+                h["id"],
+                h["desc"],
+                temp
+            ))
+        return np.array(raw, dtype=_dtype.BASE_DATA)
