@@ -19,7 +19,7 @@ class Parser:
             "trace_header" : self.__parse_header(th.tobytes(),'trace'),
             "samples" : np.frombuffer(sp.tobytes(),dtype=">f4")
         }
-        print(raw)
+        return raw.items()
 
     def parsed_headers(self, headers : np.ndarray) -> np.ndarray:
         try:
@@ -37,7 +37,6 @@ class Parser:
     ### 헤더 전용
     def __parse_header(self, b : bytes, kind : Literal["binary", "trace"]):
         raw = []
-        print(kind)
         if kind == "binary":
             header_df = BINARY_HEADER
         else:
