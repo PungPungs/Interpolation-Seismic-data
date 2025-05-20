@@ -43,7 +43,7 @@ ESSENTIAL_FEATURE = np.array([
     (17, "interval"),
     (21, "samples"),
     (25, "sample_code"),
-    (305, "Extention_header")
+    (305, "extention_header")
 ], dtype=_dtype.REF)
 
 BINARY_HEADER = np.array([

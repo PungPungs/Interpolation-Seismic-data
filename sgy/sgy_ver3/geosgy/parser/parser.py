@@ -2,7 +2,7 @@ import re
 import numpy as np
 from ..config.format_def import BINARY_HEADER, TRACE_HEADER
 from ..config.dtype import _dtype
-from typing import Literal
+from typing import Literal, Dict, Any
 import pandas as pd
 
 REGULAR = r"(?=C\s?\d?\d)"
@@ -11,17 +11,19 @@ class Parser:
     def __init__(self):
         self.decode : str = ""
 
-    def parsed_trace(self, trace, n):
+    def parsed_trace(self, trace : bytes, n : int):
+        '''n : 샘플의 수, '''
         length = 240 + (4 * n)
         b = np.frombuffer(trace,dtype=np.uint8).reshape((-1,length))
         th, sp = b[:,:240], b[:,240:]
         raw = {
-            "trace_header" : self.__parse_header(th.tobytes(),'trace'),
-            "samples" : np.frombuffer(sp.tobytes(),dtype=">f4")
+            "trace_header" : [self.__parse_header(t.tobytes(),'trace') for t in th],
+            "samples" : np.frombuffer(sp.tobytes(),dtype=">f4").reshape((n,-1))
         }
-        return raw.items()
+        return raw.get("trace_header"), raw.get("samples")
 
-    def parsed_headers(self, headers : np.ndarray) -> np.ndarray:
+    def parsed_headers(self, headers : np.ndarray[bytes]) -> Dict[str, Any]:
+        '''바이너리 전달 받은 후 딕셔너리 형태로 헤더 2종류 반환'''
         try:
             text, self.decode = headers[:3200].tobytes().decode("ascii"), "ascii"
         except UnicodeDecodeError:
