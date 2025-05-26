@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\dev\Code\cpp_basic\seg_y\segy\x64\Debug\segy.exe</FullPath>
+      <FullPath>C:\dev\Code\Interpolation-Seismic-data\C\segy\x64\Debug\segy.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

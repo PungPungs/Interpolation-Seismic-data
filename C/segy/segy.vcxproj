@@ -127,9 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="endian.c" />
     <ClCompile Include="segy.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="endian.h" />
     <ClInclude Include="header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

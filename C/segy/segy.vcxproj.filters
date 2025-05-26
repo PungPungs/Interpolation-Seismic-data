@@ -18,9 +18,15 @@
     <ClCompile Include="segy.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="endian.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="endian.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
