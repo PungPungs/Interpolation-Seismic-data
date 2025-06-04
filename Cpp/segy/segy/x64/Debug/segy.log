@@ -1,2 +1,7 @@
 ﻿  segy.cpp
-  segy.vcxproj -> C:\dev\Code\Interpolation-Seismic-data\C\segy\x64\Debug\segy.exe
+C:\DEV\Code\Python\Interpolation-Seismic-data\Cpp\segy\header.h(130,8): warning C4200: 비표준 확장이 사용됨: 구조체/공용 구조체의 배열 크기가 0입니다.
+  (소스 파일 'segy.cpp'을(를) 컴파일하는 중)
+      C:\DEV\Code\Python\Interpolation-Seismic-data\Cpp\segy\header.h(130,8):
+      이 멤버는 기본값으로 설정된 생성자 또는 복사/이동 대입 연산자에서 무시됩니다.
+  
+  segy.vcxproj -> C:\DEV\Code\Python\Interpolation-Seismic-data\Cpp\segy\x64\Debug\segy.exe

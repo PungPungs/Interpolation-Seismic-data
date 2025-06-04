@@ -1,23 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\C\\segy\\",
+  "WorkspaceRootPath": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\",
   "Documents": [
     {
-<<<<<<< HEAD:C/segy/.vs/segy/v17/DocumentLayout.json
-      "AbsoluteMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\C\\segy\\segy.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|solutionrelative:segy.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\C\\segy\\endian.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|solutionrelative:endian.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-=======
-      "AbsoluteMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|C:\\dev\\Code\\Interpolation-Seismic-data\\C\\segy\\header.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|solutionrelative:header.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|C:\\dev\\Code\\Interpolation-Seismic-data\\C\\segy\\segy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\segy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|solutionrelative:segy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
->>>>>>> 0dd4f5cf142398400e56c21c271936d47a5faeb7:Cpp/segy/.vs/segy/v17/DocumentLayout.backup.json
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\endian.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|solutionrelative:endian.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\header.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|solutionrelative:header.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,39 +22,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-<<<<<<< HEAD:C/segy/.vs/segy/v17/DocumentLayout.json
-              "DocumentIndex": 1,
-              "Title": "endian.c",
-              "DocumentMoniker": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\C\\segy\\endian.c",
-              "RelativeDocumentMoniker": "endian.c",
-              "ToolTip": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\C\\segy\\endian.c",
-              "RelativeToolTip": "endian.c",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAuwCMAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2025-05-26T10:10:23.209Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "segy.c",
-              "DocumentMoniker": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\C\\segy\\segy.c",
-              "RelativeDocumentMoniker": "segy.c",
-              "ToolTip": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\C\\segy\\segy.c",
-              "RelativeToolTip": "segy.c",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-=======
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "header.h",
-              "DocumentMoniker": "C:\\dev\\Code\\Interpolation-Seismic-data\\C\\segy\\header.h",
+              "DocumentMoniker": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\header.h",
               "RelativeDocumentMoniker": "header.h",
-              "ToolTip": "C:\\dev\\Code\\Interpolation-Seismic-data\\C\\segy\\header.h",
+              "ToolTip": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\header.h",
               "RelativeToolTip": "header.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAGwAAAAAAAAAAAAAAH0AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-06-02T16:23:26.965Z",
               "IsPinned": true,
@@ -68,14 +41,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "segy.cpp",
-              "DocumentMoniker": "C:\\dev\\Code\\Interpolation-Seismic-data\\C\\segy\\segy.cpp",
-              "RelativeDocumentMoniker": "segy.cpp",
-              "ToolTip": "C:\\dev\\Code\\Interpolation-Seismic-data\\C\\segy\\segy.cpp",
-              "RelativeToolTip": "segy.cpp",
-              "ViewState": "AgIAADcAAAAAAAAAAAAAADwAAAAAAAAAAAAAAA==",
+              "Title": "endian.cpp",
+              "DocumentMoniker": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\endian.cpp",
+              "RelativeDocumentMoniker": "endian.cpp",
+              "ToolTip": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\endian.cpp",
+              "RelativeToolTip": "endian.cpp",
+              "ViewState": "AgIAABUAAAAAAAAAAADwvyYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
->>>>>>> 0dd4f5cf142398400e56c21c271936d47a5faeb7:Cpp/segy/.vs/segy/v17/DocumentLayout.backup.json
+              "WhenOpened": "2025-06-03T09:56:31.447Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "segy.cpp",
+              "DocumentMoniker": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\segy.cpp",
+              "RelativeDocumentMoniker": "segy.cpp",
+              "ToolTip": "C:\\DEV\\Code\\Python\\Interpolation-Seismic-data\\Cpp\\segy\\segy.cpp",
+              "RelativeToolTip": "segy.cpp",
+              "ViewState": "AgIAABsAAAAAAAAAAAAcwC8AAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-05-26T10:04:57.994Z",
               "EditorCaption": ""
             }

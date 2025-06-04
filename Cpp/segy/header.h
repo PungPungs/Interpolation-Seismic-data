@@ -123,9 +123,10 @@ typedef struct {
 	int16_t DTID; // 213
 	int16_t SATS; // 215
 	int16_t SRCTYP; // 217
-	int32_t SEDSO; // 219
+	uint8_t SEDSO[6]; // 219
 	uint8_t SRCM[6]; // 225
 	int16_t SRCMU; //231;
-	float samples[1];
+	uint64_t unassigned; //233;
+	float samples[];
 } SegyTrace;
 #pragma pack(pop)

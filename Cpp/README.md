@@ -20,3 +20,25 @@
     ```
 #### 느낀 점
 - 파이썬에 비해 너무 복잡하고 머리 아프다.. 하지만 익숙해지면 정말 재밌을 거 같다.
+
+
+#### 6/4 코드 작성 중 문제 상황
+------
+1. 트레이스의 길이는 바이너리에서 데이터를 읽어온 후 판별해야하는 문제가 있어 가변적이다. 개발하는 나의 입장에서 보기 편하기 위해 연속적이진 않지만 배열로 할당을 했는데 구조체 선언시 고정 상수가 컴파일 타임에 할당되어야 한다고 한다. 더블 포인터를 쓰면 된다고 하지만 아직 미숙하고 유지보수하기에는 어려울 거 같아 전체 메모리 읽은 후 함수를 선언하여서 접근하는 방식으로 이용하여야겠다..
+
+##### 문제 상황
+```cpp
+    int trace_length = (static_cast<int>(size.QuadPart) - 3600) / ((dt*4) + 240);
+    SegyTrace* trace[trace_length] ;
+    size_t len = sizeof(SegyTrace) + (sizeof(float) * dt);
+    for (int i = 0; i < 13484; i++) {
+        trace[i] = (SegyTrace*)operator new(len);
+        DWORD bytesRead;
+        bool success_2 = ReadFile(hfile, trace[i], (DWORD)len, &bytesRead, NULL);
+        if (success_2 == TRUE) {
+            trace_start = trace_start + (LONG)len;
+            SetFilePointer(hfile, trace_start, NULL, FILE_BEGIN);;
+        }
+    }
+```
+##### 해결 상황
