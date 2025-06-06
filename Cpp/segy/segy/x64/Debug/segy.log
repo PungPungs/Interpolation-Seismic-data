@@ -1,7 +1,12 @@
 ﻿  segy.cpp
-C:\DEV\Code\Python\Interpolation-Seismic-data\Cpp\segy\header.h(130,8): warning C4200: 비표준 확장이 사용됨: 구조체/공용 구조체의 배열 크기가 0입니다.
+C:\dev\Code\Interpolation-Seismic-data\Cpp\segy\header.h(130,8): warning C4200: 비표준 확장이 사용됨: 구조체/공용 구조체의 배열 크기가 0입니다.
   (소스 파일 'segy.cpp'을(를) 컴파일하는 중)
-      C:\DEV\Code\Python\Interpolation-Seismic-data\Cpp\segy\header.h(130,8):
+      C:\dev\Code\Interpolation-Seismic-data\Cpp\segy\header.h(130,8):
       이 멤버는 기본값으로 설정된 생성자 또는 복사/이동 대입 연산자에서 무시됩니다.
   
-  segy.vcxproj -> C:\DEV\Code\Python\Interpolation-Seismic-data\Cpp\segy\x64\Debug\segy.exe
+C:\dev\Code\Interpolation-Seismic-data\Cpp\segy\segy.cpp(66,18): warning C4244: '초기화 중': 'LONGLONG'에서 'long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\dev\Code\Interpolation-Seismic-data\Cpp\segy\segy.cpp(67,19): warning C4267: '초기화 중': 'size_t'에서 'uint16_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\dev\Code\Interpolation-Seismic-data\Cpp\segy\segy.cpp(68,8): warning C4101: 'readBytes' :참조되지 않은 지역 변수입니다.
+  소스.cpp
+  코드를 생성하고 있습니다...
+  segy.vcxproj -> C:\dev\Code\Interpolation-Seismic-data\Cpp\segy\x64\Debug\segy.exe

@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="endian.cpp" />
     <ClCompile Include="segy.cpp" />
+    <ClCompile Include="소스.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="endian.h" />

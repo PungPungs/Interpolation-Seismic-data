@@ -42,3 +42,46 @@
     }
 ```
 ##### 해결 상황
+
+
+##### trace 파일 파싱 
+1. 더블 포인터를 이용
+```cpp
+	SegyTrace** ptr_trace = new SegyTrace * [channel];
+	for (int i = 0; i < channel; i++) {
+		SetFilePointer(hfile, trace_start, NULL, FILE_BEGIN);
+		ptr_trace[i] = (SegyTrace*)malloc(length);
+		bool successed = ReadFile(hfile, ptr_trace[i], length, &readBytes, NULL);
+		trace_start = 3600 + (length * i);
+	}
+# 작동 시간 : 0.35초
+```
+2. 메모리 주소를 이용한 파싱
+```cpp
+    void getTrace(BYTE* bytes, int ch, int length) {
+        SegyTrace* trace = reinterpret_cast<SegyTrace*>(bytes + (length * ch));
+    }
+
+	SetFilePointer(hfile, 3600, NULL, FILE_BEGIN);
+	BYTE* bytes = (BYTE*)malloc(trace_size);
+	bool successed = ReadFile(hfile, bytes, trace_size, &readBytes, NULL);
+	for (int i = 0; i < channel; i++) {
+		getTrace(bytes, i, length);
+	}
+# 작동 시간 : 0.24초
+```
+3. 벡터를 이용한 파싱
+```cpp
+	vector<SegyTrace> trace(channel);
+	for (int i = 0; i < channel; i++) {
+		long offset = trace_start + (length * i);
+		SetFilePointer(hfile, offset, NULL, FILE_BEGIN);
+		bool successed = ReadFile(hfile, &trace[i], length, &readBytes, NULL);
+		if (successed && readBytes != length) {
+			printf("false\n");
+		}
+	}
+# 작동시간 : 0.09초
+```
+###### 추가 아이디어
+- GPT와 대화하던 도중 헤더와 샘플부분을 나눠서 전체를 읽고 번갈아가면서 읽는 방법도 괜찮은 거 같다. 한 번 시도해봐도 좋을 듯
