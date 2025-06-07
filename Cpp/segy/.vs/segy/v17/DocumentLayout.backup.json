@@ -7,10 +7,6 @@
       "RelativeMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|solutionrelative:segy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|C:\\dev\\Code\\Interpolation-Seismic-data\\Cpp\\segy\\\uC18C\uC2A4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|solutionrelative:\uC18C\uC2A4.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|C:\\dev\\Code\\Interpolation-Seismic-data\\Cpp\\segy\\header.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{92DB7A6C-2891-4997-A9D1-A506324E549D}|segy.vcxproj|solutionrelative:header.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
@@ -22,32 +18,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "header.h",
               "DocumentMoniker": "C:\\dev\\Code\\Interpolation-Seismic-data\\Cpp\\segy\\header.h",
               "RelativeDocumentMoniker": "header.h",
               "ToolTip": "C:\\dev\\Code\\Interpolation-Seismic-data\\Cpp\\segy\\header.h",
               "RelativeToolTip": "header.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAH0AAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-02T16:23:26.965Z",
-              "IsPinned": true
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "\uC18C\uC2A4.cpp",
-              "DocumentMoniker": "C:\\dev\\Code\\Interpolation-Seismic-data\\Cpp\\segy\\\uC18C\uC2A4.cpp",
-              "RelativeDocumentMoniker": "\uC18C\uC2A4.cpp",
-              "ToolTip": "C:\\dev\\Code\\Interpolation-Seismic-data\\Cpp\\segy\\\uC18C\uC2A4.cpp",
-              "RelativeToolTip": "\uC18C\uC2A4.cpp",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAUwFgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-06-06T09:54:02.292Z",
+              "WhenOpened": "2025-06-07T06:10:33.847Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
@@ -58,7 +42,7 @@
               "RelativeDocumentMoniker": "segy.cpp",
               "ToolTip": "C:\\dev\\Code\\Interpolation-Seismic-data\\Cpp\\segy\\segy.cpp",
               "RelativeToolTip": "segy.cpp",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAUwFAAAAACAAAAAAAAAA==",
+              "ViewState": "AgIAADEAAAAAAAAAAAAowD8AAABPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-05-26T10:04:57.994Z",
               "EditorCaption": ""

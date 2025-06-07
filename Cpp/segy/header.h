@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include <vector>
+
 
 #pragma once
 #pragma pack(push,1)
@@ -130,3 +132,5 @@ typedef struct {
 	float samples[];
 } SegyTrace;
 #pragma pack(pop)
+
+
